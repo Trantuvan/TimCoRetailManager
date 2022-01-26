@@ -1,0 +1,2 @@
+# TimCoRetailManager
+Retail Management System 
