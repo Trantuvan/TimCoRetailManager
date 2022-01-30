@@ -26,6 +26,7 @@ namespace TRMDesktopUI.Helpers
             _apiClient = new HttpClient();
             _apiClient.BaseAddress = new Uri(api);
             _apiClient.DefaultRequestHeaders.Accept.Clear();
+            //Tao header moi khi request thanh cong va tra lai json type
             _apiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
