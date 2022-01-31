@@ -13,6 +13,8 @@ namespace TRMDesktopUI.ViewModels
         private readonly IAPIHelper _aPIHelper;
         private string _userName;
         private string _password;
+        private bool _isErrorVisible;
+        private string _errorMessage;
 
         public LoginViewModel(IAPIHelper aPIHelper)
         {
@@ -41,7 +43,6 @@ namespace TRMDesktopUI.ViewModels
             }
         }
 
-        private bool _isErrorVisible;
         public bool IsErrorVisible
         {
             get
@@ -57,8 +58,6 @@ namespace TRMDesktopUI.ViewModels
             }
         }
 
-        private string _errorMessage;
-
         public string ErrorMessage
         {
             get { return _errorMessage; }
@@ -66,7 +65,7 @@ namespace TRMDesktopUI.ViewModels
             {
                 _errorMessage = value;
                 NotifyOfPropertyChange(() => IsErrorVisible);
-                NotifyOfPropertyChange(() => ErrorMessage);     
+                NotifyOfPropertyChange(() => ErrorMessage);
             }
         }
 
