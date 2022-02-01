@@ -13,7 +13,8 @@ namespace TRMDataManager.Controllers
     [RoutePrefix("api/User")]
     public class UserController : ApiController
     {
-        public List<UserModel> GetById()
+        [HttpGet]
+        public UserModel GetById()
         {
             // don't ask API Ui for id (not allow UI to enter Id)
             // userId get the current user for id
@@ -21,7 +22,7 @@ namespace TRMDataManager.Controllers
 
             UserData data = new UserData();
 
-            return data.GetUserById(userId);
+            return data.GetUserById(userId).First<UserModel>();
         }
 
     }
