@@ -11,7 +11,7 @@ namespace TRMDesktopUI.ViewModels
     public class SalesViewModel : Screen
     {
         private BindingList<string> _products;
-        private string _itemQuantity;
+        private int _itemQuantity;
         private BindingList<string> _cart;
 
         public BindingList<string> Products
@@ -26,7 +26,7 @@ namespace TRMDesktopUI.ViewModels
             }
         }
 
-        public string ItemQuantity
+        public int ItemQuantity
         {
             get { return _itemQuantity; }
             set
