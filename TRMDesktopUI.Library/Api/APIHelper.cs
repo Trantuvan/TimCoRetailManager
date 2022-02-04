@@ -22,6 +22,12 @@ namespace TRMDesktopUI.Library.Api
             _loggedInUser = loggedInUser;
         }
 
+        // call this prop to access instance of _apiClient access to api
+        public HttpClient ApiClient
+        {
+            get { return _apiClient; }
+        }
+
         private void InitalizeClient()
         {
             string api = ConfigurationManager.AppSettings["api"];
@@ -76,7 +82,7 @@ namespace TRMDesktopUI.Library.Api
                     _loggedInUser.CreateDate = result.CreateDate;
                     _loggedInUser.LastName = result.LastName;
                     _loggedInUser.FirstName = result.FirstName;
-                    _loggedInUser.EmailAddress  = result.EmailAddress;
+                    _loggedInUser.EmailAddress = result.EmailAddress;
                     _loggedInUser.Id = result.Id;
                     // token came from header
                     _loggedInUser.Token = token;
