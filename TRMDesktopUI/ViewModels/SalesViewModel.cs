@@ -98,10 +98,14 @@ namespace TRMDesktopUI.ViewModels
         private decimal CalculateSubTotal()
         {
             decimal subTotal = 0;
-            foreach (var item in Cart)
-            {
-                subTotal += (item.Product.RetailPrice * item.QuantityInCart);
-            }
+
+            subTotal = Cart
+                .Sum(x => x.Product.RetailPrice * x.QuantityInCart);
+
+            //foreach (var item in Cart)
+            //{
+            //    subTotal += (item.Product.RetailPrice * item.QuantityInCart);
+            //}
             return subTotal;
         }
 
