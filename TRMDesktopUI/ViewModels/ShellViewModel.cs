@@ -13,24 +13,22 @@ namespace TRMDesktopUI.ViewModels
     {
         private readonly IEventAggregator _events;
         private readonly SalesViewModel _salesVM;
-        private readonly SimpleContainer _container;
 
-        public ShellViewModel(IEventAggregator events, SalesViewModel salesVM,
-            SimpleContainer container)
+        public ShellViewModel(IEventAggregator events, SalesViewModel salesVM)
         {
             _events = events;
             _salesVM = salesVM;
-            _container = container;
 
             // who subcribe to event; ShellViewModel current instance per request
             _events.SubscribeOnPublishedThread(this);
-            ActivateItemAsync(_container.GetInstance<LoginViewModel>());
+            // IoC inversion of control talk to container to get Instances
+            ActivateItemAsync(IoC.Get<LoginViewModel>());
         }
 
         public async Task HandleAsync(LogOnEvent message, CancellationToken cancellationToken)
         {
             // only 1 item at the time Conductor<object>
-           await ActivateItemAsync(_salesVM);
+            await ActivateItemAsync(_salesVM);
         }
     }
 }
