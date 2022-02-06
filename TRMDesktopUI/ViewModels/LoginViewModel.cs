@@ -14,8 +14,8 @@ namespace TRMDesktopUI.ViewModels
     {
         private readonly IAPIHelper _aPIHelper;
         private readonly IEventAggregator _events;
-        private string _userName;
-        private string _password;
+        private string _userName = "trantuvan.kan@gmail.com";
+        private string _password = "Pwd12345.";
         private bool _isErrorVisible;
         private string _errorMessage;
 

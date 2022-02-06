@@ -34,7 +34,8 @@ namespace TRMDesktopUI
             // whenever ask for SimpleContainer make sure to get back the instance of _container
             // with configure below
             _container.Instance(_container)
-                .PerRequest<IProductEndpoint, ProductEndpoint>();
+                .PerRequest<IProductEndpoint, ProductEndpoint>()
+                .PerRequest<ISaleEndPoint, SaleEndPoint>();
 
             // Singleton create 1 instance of the class for the life of the application
             // everytime ask for ILoggedInUserModel get back the same instance

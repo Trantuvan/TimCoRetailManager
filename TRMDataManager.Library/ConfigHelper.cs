@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TRMDesktopUI.Library.Helper
+namespace TRMDataManager.Library
 {
-    public class ConfigHelper : IConfigHelper
+    public class ConfigHelper
     {
-        public decimal GetTaxRate()
+        public static decimal GetTaxRate()
         {
             //TODO: Move this from config to the API
             string rateText = ConfigurationManager.AppSettings["taxRate"];
