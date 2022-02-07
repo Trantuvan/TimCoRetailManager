@@ -24,6 +24,7 @@ namespace TRMDesktopUI.ViewModels
         private readonly IConfigHelper _configHelper;
         private readonly IMapper _mapper;
         private ProductDisplayModel _selectedProduct;
+        private CartItemDisplayModel _selectedCartItem;
 
         public SalesViewModel(IProductEndpoint productEndpoint, ISaleEndPoint saleEndPoint, IConfigHelper configHelper,
             IMapper mapper)
@@ -67,6 +68,17 @@ namespace TRMDesktopUI.ViewModels
                 _selectedProduct = value;
                 NotifyOfPropertyChange(() => SelectedProduct);
                 NotifyOfPropertyChange(() => CanAddToCart);
+            }
+        }
+
+        public CartItemDisplayModel SelectedCartItem
+        {
+            get { return _selectedCartItem; }
+            set
+            {
+                _selectedCartItem = value;
+                NotifyOfPropertyChange(() => SelectedCartItem);
+                NotifyOfPropertyChange(() => CanRemoveFromCart);
             }
         }
 
@@ -206,6 +218,10 @@ namespace TRMDesktopUI.ViewModels
                 bool output = false;
 
                 //make sure sth is selected
+                if (SelectedCartItem != null && SelectedCartItem?.Product.QuantityInStock > 0)
+                {
+                    output = true;
+                }
 
                 return output;
             }
@@ -213,6 +229,19 @@ namespace TRMDesktopUI.ViewModels
 
         public void RemoveFromCart()
         {
+            //auto increment quanity in stock
+            SelectedCartItem.Product.QuantityInStock += 1;
+
+            if (SelectedCartItem.QuantityInCart > 1)
+            {
+                //remove from cart mac dinh chi bo duoc 1 product at the time
+                SelectedCartItem.QuantityInCart -= 1;
+            }
+            else
+            {
+                Cart.Remove(SelectedCartItem);
+            }
+
             //NotifyOfPropertyChange nhan vao 1 prop boolean => true turn on button on UI
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
