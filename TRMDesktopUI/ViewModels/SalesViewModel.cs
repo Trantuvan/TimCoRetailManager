@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro;
+﻿using AutoMapper;
+using Caliburn.Micro;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -9,27 +10,31 @@ using System.Threading.Tasks;
 using TRMDesktopUI.Library.Api;
 using TRMDesktopUI.Library.Helper;
 using TRMDesktopUI.Library.Models;
+using TRMDesktopUI.Models;
 
 namespace TRMDesktopUI.ViewModels
 {
     public class SalesViewModel : Screen
     {
-        private BindingList<ProductModel> _products;
+        private BindingList<ProductDisplayModel> _products;
         private int _itemQuantity = 1;
-        private BindingList<CartItemModel> _cart = new BindingList<CartItemModel>();
+        private BindingList<CartItemDisplayModel> _cart = new BindingList<CartItemDisplayModel>();
         private IProductEndpoint _productEndpoint;
         private readonly ISaleEndPoint _saleEndPoint;
         private readonly IConfigHelper _configHelper;
-        private ProductModel _selectedProduct;
+        private readonly IMapper _mapper;
+        private ProductDisplayModel _selectedProduct;
 
-        public SalesViewModel(IProductEndpoint productEndpoint, ISaleEndPoint saleEndPoint, IConfigHelper configHelper)
+        public SalesViewModel(IProductEndpoint productEndpoint, ISaleEndPoint saleEndPoint, IConfigHelper configHelper,
+            IMapper mapper)
         {
             _productEndpoint = productEndpoint;
             _saleEndPoint = saleEndPoint;
             _configHelper = configHelper;
+            _mapper = mapper;
         }
 
-        // event ==> not return Task
+        // event => not return Task
         protected override async void OnViewLoaded(object view)
         {
             base.OnViewLoaded(view);
@@ -38,10 +43,11 @@ namespace TRMDesktopUI.ViewModels
         private async Task LoadProducts()
         {
             var productList = await _productEndpoint.GetAll();
-            Products = new BindingList<ProductModel>(productList);
+            var products = _mapper.Map<List<ProductDisplayModel>>(productList);
+            Products = new BindingList<ProductDisplayModel>(products);
         }
 
-        public BindingList<ProductModel> Products
+        public BindingList<ProductDisplayModel> Products
         {
             get { return _products; }
             set
@@ -53,7 +59,7 @@ namespace TRMDesktopUI.ViewModels
             }
         }
 
-        public ProductModel SelectedProduct
+        public ProductDisplayModel SelectedProduct
         {
             get { return _selectedProduct; }
             set
@@ -78,7 +84,7 @@ namespace TRMDesktopUI.ViewModels
         }
 
 
-        public BindingList<CartItemModel> Cart
+        public BindingList<CartItemDisplayModel> Cart
         {
             get { return _cart; }
             set
@@ -168,18 +174,15 @@ namespace TRMDesktopUI.ViewModels
 
         public void AddToCart()
         {
-            CartItemModel existingItem = Cart.FirstOrDefault(x => x.Product == SelectedProduct);
+            CartItemDisplayModel existingItem = Cart.FirstOrDefault(x => x.Product == SelectedProduct);
 
             if (existingItem != null)
             {
                 existingItem.QuantityInCart += ItemQuantity;
-                // HACK - to trick there is the new object of CartItemModel 
-                Cart.Remove(existingItem);
-                Cart.Add(existingItem);
             }
             else
             {
-                CartItemModel item = new CartItemModel
+                CartItemDisplayModel item = new CartItemDisplayModel
                 {
                     Product = SelectedProduct,
                     QuantityInCart = ItemQuantity

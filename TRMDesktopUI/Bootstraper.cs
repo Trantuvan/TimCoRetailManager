@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro;
+﻿using AutoMapper;
+using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ using TRMDesktopUI.Helpers;
 using TRMDesktopUI.Library.Api;
 using TRMDesktopUI.Library.Helper;
 using TRMDesktopUI.Library.Models;
+using TRMDesktopUI.Models;
 using TRMDesktopUI.ViewModels;
 
 namespace TRMDesktopUI
@@ -29,8 +31,26 @@ namespace TRMDesktopUI
 
         }
 
+        private IMapper ConfigureAutoMapper()
+        {
+            // config model nao map vs model nao
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<ProductModel, ProductDisplayModel>();
+                cfg.CreateMap<CartItemModel, CartItemDisplayModel>();
+            });
+
+            //lay config phia tren tao instance dia chi
+            var output = config.CreateMapper();
+
+            return output;
+        }
+
         protected override void Configure()
         {
+            //gan mapper vao container
+            _container.Instance(ConfigureAutoMapper());
+
             // whenever ask for SimpleContainer make sure to get back the instance of _container
             // with configure below
             _container.Instance(_container)

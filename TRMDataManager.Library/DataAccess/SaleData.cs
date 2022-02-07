@@ -15,7 +15,7 @@ namespace TRMDataManager.Library.DataAccess
             //TODO: Make this SOLID/DRY/Better
             //Start filling in the sale details models we will save to the database
 
-            // SaleDetail thong tin tren bill
+            // SaleDetail thong tin chi tiet 1 san pham
             List<SaleDetailDBModel> details = new List<SaleDetailDBModel>();
             ProductData product = new ProductData();
             var taxRate = ConfigHelper.GetTaxRate() / 100;
@@ -52,7 +52,7 @@ namespace TRMDataManager.Library.DataAccess
 
             //Create the Sale model
 
-            //Sale tong thong tin tu cac bill List<SaleDetail>
+            //Sale tong thong tin tren 1 bill List<san pham tren 1 bill>
             SaleDBModel sale = new SaleDBModel
             {
                 // tong tien 1 bill chua tinh thue
