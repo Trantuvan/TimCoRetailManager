@@ -49,6 +49,8 @@ namespace TRMDataManager.Library.Internal.DataAccess
             _connection.Open();
 
             _transaction = _connection.BeginTransaction();
+
+            _isClosed = false;
         }
 
         //Load using the transaction
@@ -65,11 +67,15 @@ namespace TRMDataManager.Library.Internal.DataAccess
         }
 
         //Close connection/stop transaction
+
+        private bool _isClosed = false;
         public void CommitTransaction()
         {
             //successed transaction commit && close conn
             _transaction?.Commit();
             _connection?.Close();
+
+            _isClosed = true;
         }
 
         public void RollBackTransaction()
@@ -77,12 +83,27 @@ namespace TRMDataManager.Library.Internal.DataAccess
             //failed transaction rollback && close conn
             _transaction?.Rollback();
             _connection?.Close();
+
+            _isClosed = true;
         }
 
         //Implement dispose
         public void Dispose()
         {
-            CommitTransaction();
+            if (_isClosed == false)
+            {
+                try
+                {
+                    CommitTransaction();
+                }
+                catch 
+                {
+                    //TODO - Log this issue
+                }
+            }
+
+            _transaction = null;
+            _connection = null;
         }
     }
 }

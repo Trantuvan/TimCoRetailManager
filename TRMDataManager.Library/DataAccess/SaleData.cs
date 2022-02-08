@@ -87,7 +87,8 @@ namespace TRMDataManager.Library.DataAccess
                         sql.SaveDataInTransaction<SaleDetailDBModel>("dbo.spSaleDetail_Insert", item);
                     }
 
-                    //sql.CommitTransaction();
+                    //commit transaction && close connection
+                    sql.CommitTransaction();
                 }
                 catch
                 {
