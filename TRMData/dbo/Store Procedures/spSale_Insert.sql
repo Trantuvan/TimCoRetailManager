@@ -18,5 +18,5 @@ BEGIN
 		@Total
 	);
 
-	SELECT @Id = @@IDENTITY;
+	SELECT @Id = SCOPE_IDENTITY();
 END
