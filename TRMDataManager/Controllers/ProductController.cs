@@ -9,15 +9,15 @@ using TRMDataManager.Library.Models;
 
 namespace TRMDataManager.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Cashier")]
     [RoutePrefix("api/Product")]
     public class ProductController : ApiController
     {
         [HttpGet]
         public List<ProductModel> Get()
         {
-            ProductData data = new ProductData();  
-            
+            ProductData data = new ProductData();
+
             return data.GetProducts();
         }
     }

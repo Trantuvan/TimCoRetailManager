@@ -14,6 +14,7 @@ namespace TRMDataManager.Controllers
     [RoutePrefix("api/Sale")]
     public class SaleController : ApiController
     {
+        [Authorize(Roles = "Cashier")]
         [HttpPost]
         public void Post(SaleModel sale)
         {
@@ -24,6 +25,7 @@ namespace TRMDataManager.Controllers
             data.SaveSale(sale, userId);
         }
 
+        [Authorize(Roles = "Admin, Manager")]
         [HttpGet]
         [Route("GetSalesReport")]
         public List<SaleReportModel> GetSalesReport()
@@ -31,7 +33,7 @@ namespace TRMDataManager.Controllers
             SaleData data = new SaleData();
 
             var output = data.GetSaleReport();
-            
+
             return output;
         }
     }
