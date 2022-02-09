@@ -55,6 +55,7 @@ namespace TRMDesktopUI
             // with configure below
             _container.Instance(_container)
                 .PerRequest<IProductEndpoint, ProductEndpoint>()
+                .PerRequest<IUserEndpoint, UserEndpoint>()
                 .PerRequest<ISaleEndPoint, SaleEndPoint>();
 
             // Singleton create 1 instance of the class for the life of the application

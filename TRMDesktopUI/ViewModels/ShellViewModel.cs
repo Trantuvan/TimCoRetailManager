@@ -45,16 +45,21 @@ namespace TRMDesktopUI.ViewModels
                 return output;
             }
         }
-        public void ExitApplication()
+        public async Task ExitApplication()
         {
-            TryCloseAsync();
+            await TryCloseAsync();
         }
 
-        public void LogOut()
+        public async Task UserManagement()
+        {
+            await ActivateItemAsync(IoC.Get<UserDisplayViewModel>());
+        }
+
+        public async Task LogOut()
         {
             _user.ResetUserModel();
             _apiHelper.LogOffUser();
-            ActivateItemAsync(IoC.Get<LoginViewModel>());
+            await ActivateItemAsync(IoC.Get<LoginViewModel>());
             NotifyOfPropertyChange(() => IsLoggedIn);
         }
 
