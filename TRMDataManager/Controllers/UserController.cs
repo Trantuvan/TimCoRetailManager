@@ -62,5 +62,49 @@ namespace TRMDataManager.Controllers
                 return output;
             }
         }
+
+        [Authorize(Roles = "Admin")]
+        [Route("Admin/GetAllRoles")]
+        [HttpGet]
+        public Dictionary<string, string> GetAllRoles()
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                var roles = context.Roles.ToDictionary(x => x.Id, x => x.Name);
+                return roles;
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [Route("Admin/AddRole")]
+        [HttpPost]
+        public void AddRole(UserRolePairModel pairing)
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                //IdentityModels chua class ApplicationUser => goi ctor ApplicationUser
+                var userStore = new UserStore<ApplicationUser>(context);
+                //Tuong tac voi bang user (bang nay PK phai la string)
+                var userManager = new UserManager<ApplicationUser>(userStore);
+
+                userManager.AddToRole(pairing.UserId, pairing.RoleName);
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [Route("Admin/RemoveRole")]
+        [HttpPost]
+        public void RemoveRole(UserRolePairModel pairing)
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                //IdentityModels chua class ApplicationUser => goi ctor ApplicationUser
+                var userStore = new UserStore<ApplicationUser>(context);
+                //Tuong tac voi bang user (bang nay PK phai la string)
+                var userManager = new UserManager<ApplicationUser>(userStore);
+
+                userManager.RemoveFromRole(pairing.UserId, pairing.RoleName);
+            }
+        }
     }
 }
