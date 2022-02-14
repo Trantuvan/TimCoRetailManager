@@ -29,7 +29,7 @@ namespace TRMDesktopUI.ViewModels
             // who subcribe to event; ShellViewModel current instance per request
             _events.SubscribeOnPublishedThread(this);
             // IoC inversion of control talk to container to get Instances
-            ActivateItemAsync(IoC.Get<LoginViewModel>());
+            ActivateItemAsync(IoC.Get<LoginViewModel>(), new CancellationToken());
         }
 
         public bool IsLoggedIn
@@ -52,21 +52,21 @@ namespace TRMDesktopUI.ViewModels
 
         public async Task UserManagement()
         {
-            await ActivateItemAsync(IoC.Get<UserDisplayViewModel>());
+            await ActivateItemAsync(IoC.Get<UserDisplayViewModel>(), new CancellationToken());
         }
 
         public async Task LogOut()
         {
             _user.ResetUserModel();
             _apiHelper.LogOffUser();
-            await ActivateItemAsync(IoC.Get<LoginViewModel>());
+            await ActivateItemAsync(IoC.Get<LoginViewModel>(), new CancellationToken());
             NotifyOfPropertyChange(() => IsLoggedIn);
         }
 
         public async Task HandleAsync(LogOnEvent message, CancellationToken cancellationToken)
         {
             // only 1 item at the time Conductor<object>
-            await ActivateItemAsync(_salesVM);
+            await ActivateItemAsync(_salesVM, cancellationToken);
             NotifyOfPropertyChange(() => IsLoggedIn);
         }
     }

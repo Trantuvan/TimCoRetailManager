@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TRMDesktopUI.EventModels;
 using TRMDesktopUI.Helpers;
@@ -101,7 +102,7 @@ namespace TRMDesktopUI.ViewModels
                 //Publish event to know someone is loged in
                 //pass in an instance of LogOnEvent to make sure this is a LogOnEvent
                 //this LogOnEvent doesn't need to pass in any data because GetLoggedInUserInfo already done it
-                await _events.PublishOnUIThreadAsync(new LogOnEvent());
+                await _events.PublishOnUIThreadAsync(new LogOnEvent(), new CancellationToken());
 
             }
             catch (Exception ex)
