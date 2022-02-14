@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TRMDataManager.Library.Internal.DataAccess;
 using TRMDataManager.Library.Models;
 
@@ -25,7 +23,8 @@ namespace TRMDataManager.Library.DataAccess
             // SaleDetail thong tin chi tiet 1 san pham
             List<SaleDetailDBModel> details = new List<SaleDetailDBModel>();
             ProductData product = new ProductData(_config);
-            var taxRate = ConfigHelper.GetTaxRate() / 100;
+            string rateText = _config["Tax:taxRate"];
+            var taxRate = ConfigHelper.GetTaxRate(rateText) / 100;
 
             foreach (var item in saleInfo.SaleDetails)
             {
