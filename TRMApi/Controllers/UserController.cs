@@ -22,14 +22,15 @@ namespace TRMApi.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly IConfiguration _config;
+        private readonly IUserData _userData;
 
-        public UserController(ApplicationDbContext context, UserManager<IdentityUser> userManager,
-            IConfiguration config)
+        public UserController(ApplicationDbContext context,
+                              UserManager<IdentityUser> userManager,
+                              IUserData userData)
         {
             _context = context;
             _userManager = userManager;
-            _config = config;
+            _userData = userData;
         }
 
         [HttpGet]
@@ -37,11 +38,9 @@ namespace TRMApi.Controllers
         {
             // don't ask API Ui for id (not allow UI to enter Id)
             // userId get the current user for id
-            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);//RequestContext.Principal.Identity.GetUserId();
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            UserData data = new UserData(_config);
-
-            return data.GetUserById(userId).First<UserModel>();
+            return _userData.GetUserById(userId).First<UserModel>();
         }
 
         [Authorize(Roles = "Admin")]
@@ -65,11 +64,6 @@ namespace TRMApi.Controllers
                 };
 
                 u.Roles = userRoles.Where(x => x.UserId == u.Id).ToDictionary(key => key.RoleId, value => value.Name);
-
-                //foreach (var r in user.Roles)
-                //{
-                //    u.Roles.Add(r.RoleId, roles.Where(x => x.Id == r.RoleId).First().Name);
-                //}
 
                 output.Add(u);
             }

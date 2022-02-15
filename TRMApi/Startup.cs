@@ -15,6 +15,8 @@ using TRMApi.Data;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using TRMDataManager.Library.DataAccess;
+using TRMDataManager.Library.Internal.DataAccess;
 
 namespace TRMApi
 {
@@ -40,6 +42,14 @@ namespace TRMApi
             services.AddControllersWithViews();
             services.AddRazorPages();
 
+            //AddTransient create instance every time ask for it
+            services.AddTransient<ISqlDataAccess, SqlDataAccess>();
+            services.AddTransient<IInventoryData, InventoryData>();
+            services.AddTransient<IProductData, ProductData>();
+            services.AddTransient<ISaleData, SaleData>();
+            services.AddTransient<IUserData, UserData>();
+
+            //For Authentication JwT
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = "JwtBearer";
