@@ -72,10 +72,12 @@ namespace TRMApi.Controllers
                 claims.Add(new Claim(ClaimTypes.Role, role.Name));
             }
 
+            string key = _config.GetValue<string>("Secrets:SecurityKey");
+
             var token = new JwtSecurityToken(
                 new JwtHeader(
                     new SigningCredentials(
-                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Secrets:SecurityKey"]))
+                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
                         , SecurityAlgorithms.HmacSha256))
                         , new JwtPayload(claims));
 
