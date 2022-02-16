@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using TRMDataManager.Library.Internal.DataAccess;
 using TRMDataManager.Library.Models;
@@ -19,6 +20,23 @@ namespace TRMDataManager.Library.DataAccess
             _productData = productData;
             _sql = sql;
         }
+
+        public decimal GetTaxRate()
+        {
+            string rateText = _config["taxRate"];
+            // if it not a valid number (rateText tra lai string test khong convert double TryParse ==> false)
+            // if convert dc return true; convert output
+            bool IsValidTaxRate = Decimal.TryParse(rateText, out decimal output);
+
+            if (IsValidTaxRate == false)
+            {
+                throw new ConfigurationErrorsException("The tax rate is not setup property");
+            }
+
+            output = output / 100;
+            return output;
+        }
+
         public void SaveSale(SaleModel saleInfo, string cashierId)
         {
             //TODO: Make this SOLID/DRY/Better
@@ -27,8 +45,7 @@ namespace TRMDataManager.Library.DataAccess
             // SaleDetail thong tin chi tiet 1 san pham
             List<SaleDetailDBModel> details = new List<SaleDetailDBModel>();
 
-            string rateText = _config["Tax:taxRate"];
-            var taxRate = ConfigHelper.GetTaxRate(rateText) / 100;
+            var taxRate = GetTaxRate();
 
             foreach (var item in saleInfo.SaleDetails)
             {
