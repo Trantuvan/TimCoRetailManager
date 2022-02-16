@@ -55,6 +55,7 @@ namespace TRMDesktopUI.ViewModels
             {
                 _selectedUserRole = value;
                 NotifyOfPropertyChange(() => SelectedUserRole);
+                NotifyOfPropertyChange(() => CanRemoveSelectedRole);
             }
         }
 
@@ -68,6 +69,7 @@ namespace TRMDesktopUI.ViewModels
             {
                 _selectedAvailableRole = value;
                 NotifyOfPropertyChange(() => SelectedAvailableRole);
+                NotifyOfPropertyChange(() => CanAddSelectedRole);
             }
         }
 
@@ -153,6 +155,8 @@ namespace TRMDesktopUI.ViewModels
         {
             var roles = await _userEndpoint.GetAllRoles();
 
+            AvailableRoles.Clear();
+
             foreach (var role in roles)
             {
                 if (UserRoles.IndexOf(role.Value) < 0)
@@ -162,12 +166,36 @@ namespace TRMDesktopUI.ViewModels
             }
         }
 
+        public bool CanAddSelectedRole
+        {
+            get
+            {
+                if (SelectedUser is null || SelectedAvailableRole is null)
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+
         public async Task AddSelectedRole()
         {
             await _userEndpoint.AddUserToRole(SelectedUser.Id, SelectedAvailableRole);
 
             UserRoles.Add(SelectedAvailableRole);
             AvailableRoles.Remove(SelectedAvailableRole);
+        }
+
+        public bool CanRemoveSelectedRole
+        {
+            get
+            {
+                if (SelectedUser is null || SelectedUserRole is null)
+                {
+                    return false;
+                }
+                return true;
+            }
         }
 
         public async Task RemoveSelectedRole()
