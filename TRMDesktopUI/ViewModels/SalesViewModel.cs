@@ -1,16 +1,14 @@
 ﻿using AutoMapper;
 using Caliburn.Micro;
-using Newtonsoft.Json.Linq;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Dynamic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using TRMDesktopUI.Library.Api;
-using TRMDesktopUI.Library.Helper;
 using TRMDesktopUI.Library.Models;
 using TRMDesktopUI.Models;
 
@@ -23,19 +21,19 @@ namespace TRMDesktopUI.ViewModels
         private BindingList<CartItemDisplayModel> _cart = new BindingList<CartItemDisplayModel>();
         private IProductEndpoint _productEndpoint;
         private readonly ISaleEndPoint _saleEndPoint;
-        private readonly IConfigHelper _configHelper;
+        private readonly IConfiguration _config;
         private readonly IMapper _mapper;
         private readonly StatusInfoViewModel _status;
         private readonly IWindowManager _window;
         private ProductDisplayModel _selectedProduct;
         private CartItemDisplayModel _selectedCartItem;
 
-        public SalesViewModel(IProductEndpoint productEndpoint, ISaleEndPoint saleEndPoint, IConfigHelper configHelper,
+        public SalesViewModel(IProductEndpoint productEndpoint, ISaleEndPoint saleEndPoint, IConfiguration config,
             IMapper mapper, StatusInfoViewModel status, IWindowManager window)
         {
             _productEndpoint = productEndpoint;
             _saleEndPoint = saleEndPoint;
-            _configHelper = configHelper;
+            _config = config;
             _mapper = mapper;
             _status = status;
             _window = window;
@@ -172,7 +170,7 @@ namespace TRMDesktopUI.ViewModels
         private decimal CalculateTax()
         {
             decimal taxAmount = 0;
-            decimal taxRate = _configHelper.GetTaxRate() / 100;
+            decimal taxRate = _config.GetValue<decimal>("taxRate") / 100;
 
             taxAmount = Cart
                 .Where(x => x.Product.IsTaxable)
