@@ -11,7 +11,6 @@ using System;
 using System.Text;
 using TRMApi.Data;
 using TRMDataManager.Library.DataAccess;
-using TRMDataManager.Library.Internal.DataAccess;
 
 namespace TRMApi
 {
