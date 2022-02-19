@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using TRMApi.Models;
 
 namespace TRMApi.Controllers
@@ -28,7 +24,7 @@ namespace TRMApi.Controllers
             return View();
         }
 
-        public  IActionResult Privacy()
+        public IActionResult Privacy()
         {
             //string[] roles = { "Admin", "Manager", "Cashier" };
             //foreach (var role in roles)

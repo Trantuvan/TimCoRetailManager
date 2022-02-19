@@ -1,5 +1,3 @@
-using System;
-
 namespace TRMApi.Models
 {
     public class ErrorViewModel

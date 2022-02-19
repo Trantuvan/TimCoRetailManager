@@ -26,6 +26,15 @@ namespace TRMApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //cors cross origin request (request from 1 url to other url)
+            //allow any url can talk to our api
+            services.AddCors(policy =>
+            {
+                policy.AddPolicy("OpenCorsPolicy", option =>
+                    option.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+            });
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
@@ -90,6 +99,8 @@ namespace TRMApi
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
+            //use this cors policy
+            app.UseCors("OpenCorsPolicy");
             app.UseStaticFiles();
 
             app.UseRouting();
