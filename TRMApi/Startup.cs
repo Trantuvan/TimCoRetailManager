@@ -33,6 +33,7 @@ namespace TRMApi
                 //add role into authentication
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddControllersWithViews();
             services.AddRazorPages();
 
@@ -81,7 +82,6 @@ namespace TRMApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
             }
             else
             {
