@@ -1,0 +1,65 @@
+﻿@page "/login"
+@inject IAuthenticationService AuthService
+@inject NavigationManager NavManager
+
+<h3>Log In</h3>
+
+@if (showAuthenticationError)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>@authenticationErrorText</p>
+    </div>
+}
+
+@*only execute ExecuteLogIn only valid submit with attribute Required in AuthenticationUserModel*@
+<EditForm Model="model" OnValidSubmit="ExecuteLogIn" class="card card-body bg-light mt-5">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group row">
+        <label for="email" class="col-md-2 col-form-label">Email:</label>
+        <div class="col-md-10">
+            <InputText type="text" id="email" class="form-control" @bind-Value="model.Email"></InputText>
+            <ValidationMessage For="@(() => model.Email)"/>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="password" class="col-md-2 col-form-label">Password:</label>
+        <div class="col-md-10">
+            <InputText type="password" id="password" class="form-control" @bind-Value="model.Password"></InputText>
+            <ValidationMessage For="@(() => model.Password)"/>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class ="col-md-12 text-right">
+            <button type="submit" class="btn btn-success">Log In</button>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private AuthenticationUserModel model = new();
+    private bool showAuthenticationError = false;
+    private string authenticationErrorText = "";
+
+    private async Task ExecuteLogIn()
+    {
+        // always clear the showAuthenticationError when login
+        showAuthenticationError = false;
+
+        var result = await AuthService.Login(model);
+
+        if (result is not null)
+        {
+            //navigate to root
+            NavManager.NavigateTo("/");
+        }
+        else
+        {
+            authenticationErrorText = "There was an error when trying to log in.";
+            showAuthenticationError = true;
+        }
+    }
+}
