@@ -25,7 +25,8 @@ namespace TRMApi.Controllers
 
         public UserController(ApplicationDbContext context,
                               UserManager<IdentityUser> userManager,
-                              IUserData userData, ILogger<UserController> logger)
+                              IUserData userData,
+                              ILogger<UserController> logger)
         {
             _context = context;
             _userManager = userManager;
@@ -41,6 +42,55 @@ namespace TRMApi.Controllers
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             return _userData.GetUserById(userId).First<UserModel>();
+        }
+
+        public record UserRegistrationModel(
+            string FirstName,
+            string LastName,
+            string EmailAddress,
+            string Password);
+
+        [HttpPost]
+        [Route("Register")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(UserRegistrationModel user)
+        {
+            if (ModelState.IsValid)
+            {
+                var existingUser = await _userManager.FindByEmailAsync(user.EmailAddress);
+                if (existingUser is null)
+                {
+                    IdentityUser newUser = new()
+                    {
+                        Email = user.EmailAddress,
+                        EmailConfirmed = true,
+                        UserName = user.EmailAddress
+                    };
+                    IdentityResult result = await _userManager.CreateAsync(newUser, user.Password);
+
+                    if (result.Succeeded)
+                    {
+                        existingUser = await _userManager.FindByEmailAsync(user.EmailAddress);
+
+                        if (existingUser is null)
+                        {
+                            return BadRequest();
+                        }
+
+                        UserModel u = new()
+                        {
+                            Id = existingUser.Id,
+                            FirstName = user.FirstName,
+                            LastName = user.LastName,
+                            EmailAddress = user.EmailAddress
+                        };
+
+                        _userData.CreateUser(u);
+                        return Ok();
+                    }
+                }
+            }
+            return BadRequest();
         }
 
         [Authorize(Roles = "Admin")]

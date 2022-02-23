@@ -80,5 +80,6 @@
     <Build Include="dbo\Store Procedures\spInventory_GetAll.sql" />
     <Build Include="dbo\Store Procedures\spInventory_Insert.sql" />
     <Build Include="dbo\Store Procedures\spSale_SaleReport.sql" />
+    <Build Include="dbo\Store Procedures\spUser_Insert.sql" />
   </ItemGroup>
 </Project>
