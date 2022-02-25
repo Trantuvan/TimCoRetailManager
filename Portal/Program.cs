@@ -6,6 +6,8 @@ using Portal.Authentication;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using TRMDesktopUI.Library.Api;
+using TRMDesktopUI.Library.Models;
 
 namespace Portal
 {
@@ -22,6 +24,12 @@ namespace Portal
             builder.Services.AddAuthorizationCore();
             //add DI for custom AuthenticationStateProvider; everytime ask will return AuthStateProvider
             builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
+
+            builder.Services.AddSingleton<IAPIHelper, APIHelper>();
+            builder.Services.AddSingleton<ILoggedInUserModel, LoggedInUserModel>();
+            builder.Services.AddTransient<IProductEndpoint, ProductEndpoint>();
+            builder.Services.AddTransient<IUserEndpoint, UserEndpoint>();
+            builder.Services.AddTransient<ISaleEndPoint, SaleEndPoint>();
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 

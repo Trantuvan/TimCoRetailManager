@@ -50,22 +50,34 @@ namespace TRMApi.Controllers
             string EmailAddress,
             string Password);
 
+        //public class UserRegistrationModel(
+        //   public string FirstName {get; init;}
+        //   
+        //   public UserRegistrationModel(string firstName)
+        //   {
+        //     FirstName = firstName
+        //   }
+        //   );
+
         [HttpPost]
         [Route("Register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register(UserRegistrationModel user)
         {
+            //ModelState.IsValid checking valid using DataAnnotation in UserRegistrationModel
             if (ModelState.IsValid)
             {
                 var existingUser = await _userManager.FindByEmailAsync(user.EmailAddress);
                 if (existingUser is null)
                 {
+                    //populate data for EntityFramework DB
                     IdentityUser newUser = new()
                     {
                         Email = user.EmailAddress,
                         EmailConfirmed = true,
                         UserName = user.EmailAddress
                     };
+                    // khi tao moi 1 user IdentityUser (AspNetUsers) pass in the user.Password separately don't have to store in newUser Obj
                     IdentityResult result = await _userManager.CreateAsync(newUser, user.Password);
 
                     if (result.Succeeded)
@@ -76,7 +88,7 @@ namespace TRMApi.Controllers
                         {
                             return BadRequest();
                         }
-
+                        //populate data for Dapper DB
                         UserModel u = new()
                         {
                             Id = existingUser.Id,

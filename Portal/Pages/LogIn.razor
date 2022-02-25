@@ -15,6 +15,9 @@
         <div class=col-auto>
             <button type="submit" class="btn btn-success">Log In</button>
         </div>
+        <div class=col-auto>
+            <button type="button" class="btn btn-primary" @onclick="RegisterUser">Register</button>
+        </div>
     </div>
 </EditForm>
 
@@ -23,12 +26,17 @@
     private bool showAuthenticationError = false;
     private string authenticationErrorText = "";
 
+    private void RegisterUser()
+    {
+        NavManager.NavigateTo("/register");
+    }
+
     private async Task ExecuteLogIn()
     {
         // always clear the showAuthenticationError when login
         showAuthenticationError = false;
 
-        var result = await AuthService.Login(model);
+        AuthenticatedUserModel result = await AuthService.Login(model);
 
         if (result is not null)
         {
