@@ -14,7 +14,7 @@ namespace TRMApi.Controllers
     {
         private readonly IProductData _productData;
 
-        public ProductController(IConfiguration config, IProductData productData)
+        public ProductController(IProductData productData)
         {
             _productData = productData;
         }

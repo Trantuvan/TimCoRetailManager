@@ -18,8 +18,8 @@ namespace TRMDesktopUI.ViewModels
     {
         private BindingList<ProductDisplayModel> _products;
         private int _itemQuantity = 1;
-        private BindingList<CartItemDisplayModel> _cart = new BindingList<CartItemDisplayModel>();
-        private IProductEndpoint _productEndpoint;
+        private BindingList<CartItemDisplayModel> _cart = new();
+        private readonly IProductEndpoint _productEndpoint;
         private readonly ISaleEndPoint _saleEndPoint;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
@@ -232,7 +232,7 @@ namespace TRMDesktopUI.ViewModels
             }
             else
             {
-                CartItemDisplayModel item = new CartItemDisplayModel
+                CartItemDisplayModel item = new()
                 {
                     Product = SelectedProduct,
                     QuantityInCart = ItemQuantity
@@ -307,7 +307,7 @@ namespace TRMDesktopUI.ViewModels
         public async Task CheckOut()
         {
             //Create a SaleModel post to API
-            SaleModel sale = new SaleModel();
+            SaleModel sale = new();
 
             foreach (var item in Cart)
             {
