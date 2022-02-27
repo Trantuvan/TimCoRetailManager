@@ -60,7 +60,7 @@ namespace Portal.Authentication
             await _localStorage.SetItemAsync(_authTokenStorageKey, result.Access_Token);
 
             //Notify system user state has changes call NotifyUserAuthentication and passing Access_Token
-            ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(result.Access_Token);
+            await ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(result.Access_Token);
 
             //whenever user HttpClient thi add header Authorization bearer access_token
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", result.Access_Token);
@@ -70,12 +70,9 @@ namespace Portal.Authentication
 
         public async Task LogOut()
         {
-            await _localStorage.RemoveItemAsync(_authTokenStorageKey);
             //casting AuthStateProvider child class of AuthenticationStateProvider
             //has extra class NotifyUserLogOut && NotifyUserAuthentication
-            ((AuthStateProvider)_authStateProvider).NotifyUserLogOut();
-
-            _client.DefaultRequestHeaders.Authorization = null;
+            await ((AuthStateProvider)_authStateProvider).NotifyUserLogOut();
         }
     }
 }

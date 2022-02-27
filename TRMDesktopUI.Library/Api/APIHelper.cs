@@ -31,8 +31,10 @@ namespace TRMDesktopUI.Library.Api
         {
             string api = _config.GetValue<string>("api");
 
-            _apiClient = new HttpClient();
-            _apiClient.BaseAddress = new Uri(api);
+            _apiClient = new HttpClient
+            {
+                BaseAddress = new Uri(api)
+            };
             _apiClient.DefaultRequestHeaders.Accept.Clear();
             //Tao header moi khi request thanh cong va tra lai json type
             _apiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -47,17 +49,15 @@ namespace TRMDesktopUI.Library.Api
                new KeyValuePair<string, string>("password",password)
             });
 
-            using (HttpResponseMessage response = await _apiClient.PostAsync("/Token", data))
+            using HttpResponseMessage response = await _apiClient.PostAsync("/Token", data);
+            if (response.IsSuccessStatusCode)
             {
-                if (response.IsSuccessStatusCode)
-                {
-                    var result = await response.Content.ReadAsAsync<AuthenticatedUser>();
-                    return result;
-                }
-                else
-                {
-                    throw new Exception(response?.ReasonPhrase);
-                }
+                var result = await response.Content.ReadAsAsync<AuthenticatedUser>();
+                return result;
+            }
+            else
+            {
+                throw new Exception(response?.ReasonPhrase);
             }
         }
 
@@ -69,27 +69,25 @@ namespace TRMDesktopUI.Library.Api
             // add to header token
             _apiClient.DefaultRequestHeaders.Add("Authorization", $"bearer {token}");
 
-            using (HttpResponseMessage response = await _apiClient.GetAsync("api/User"))
+            using HttpResponseMessage response = await _apiClient.GetAsync("api/User");
+            if (response.IsSuccessStatusCode)
             {
-                if (response.IsSuccessStatusCode)
-                {
-                    // LoggedInUserModel come from the web api don't have Token prop
-                    var result = await response.Content.ReadAsAsync<LoggedInUserModel>();
+                // LoggedInUserModel come from the web api don't have Token prop
+                var result = await response.Content.ReadAsAsync<LoggedInUserModel>();
 
-                    // mapping 2 instance of LoggedInUserModel singleton vs result (have Token prop)
-                    // singleton update here it update every where
-                    _loggedInUser.CreateDate = result.CreateDate;
-                    _loggedInUser.LastName = result.LastName;
-                    _loggedInUser.FirstName = result.FirstName;
-                    _loggedInUser.EmailAddress = result.EmailAddress;
-                    _loggedInUser.Id = result.Id;
-                    // token came from header
-                    _loggedInUser.Token = token;
-                }
-                else
-                {
-                    throw new Exception(response?.ReasonPhrase);
-                }
+                // mapping 2 instance of LoggedInUserModel singleton vs result (have Token prop)
+                // singleton update here it update every where
+                _loggedInUser.CreateDate = result.CreateDate;
+                _loggedInUser.LastName = result.LastName;
+                _loggedInUser.FirstName = result.FirstName;
+                _loggedInUser.EmailAddress = result.EmailAddress;
+                _loggedInUser.Id = result.Id;
+                // token came from header
+                _loggedInUser.Token = token;
+            }
+            else
+            {
+                throw new Exception(response?.ReasonPhrase);
             }
         }
 

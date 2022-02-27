@@ -19,17 +19,15 @@ namespace TRMDesktopUI.Library.Api
         {
             // _aPIHelper.ApiClient access ApiClient prop to get _apiHelper instance in APIHeler
             // _apiHelper contains info of authorization Token and login data
-            using (HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("api/Product"))
+            using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("api/Product");
+            if (response.IsSuccessStatusCode)
             {
-                if (response.IsSuccessStatusCode)
-                {
-                    var result = await response.Content.ReadAsAsync<List<ProductModel>>();
-                    return result;
-                }
-                else
-                {
-                    throw new Exception(response?.ReasonPhrase);
-                }
+                var result = await response.Content.ReadAsAsync<List<ProductModel>>();
+                return result;
+            }
+            else
+            {
+                throw new Exception(response?.ReasonPhrase);
             }
         }
     }
