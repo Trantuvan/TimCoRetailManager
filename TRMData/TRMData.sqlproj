@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="PublishLocations\TRMData.publish.xml" />
+    <None Include="TRMData.publish.xml" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\User.sql" />
