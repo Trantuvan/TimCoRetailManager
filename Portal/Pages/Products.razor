@@ -2,6 +2,7 @@
 @using Microsoft.Extensions.Configuration
 @inject IProductEndpoint productEndpoint
 @inject IConfiguration config
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 @attribute [Authorize(Roles = "Cashier")]
 
 <h3>Products</h3>
@@ -55,10 +56,39 @@
 @code {
     private List<ProductModel> products;
     private string api;
+    private const string ProductListName = "productList";
+    private const string ProductCacheDate = "productCacheDate";
 
     protected override async Task OnInitializedAsync()
     {
         api = config.GetValue<string>("api");
-        products = await productEndpoint.GetAll();
+
+        //load item async from localStorage if exitst if not return null
+        products = await localStorage.GetItemAsync<List<ProductModel>>(ProductListName);
+        DateTime? cacheDate = await localStorage.GetItemAsync<DateTime?>(ProductCacheDate);
+        double totalMinutes = 0;
+
+        if (cacheDate is not null)
+        {
+            //DateTime vs DateTime? (if is null)
+            totalMinutes = DateTime.UtcNow.Subtract((DateTime)cacheDate).TotalMinutes;
+        }
+
+        if (products is null || cacheDate is null || totalMinutes > 10)
+        {
+            try
+            {
+                throw new Exception("test exception");
+                products = await productEndpoint.GetAll();
+                await localStorage.SetItemAsync(ProductListName, products);
+                //ProductCacheDate whenever save to localStorage also save Date&Time
+                //then make a call How long we want to wait before refresh Cached
+                await localStorage.SetItemAsync(ProductCacheDate, DateTime.UtcNow);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
     }
 }
