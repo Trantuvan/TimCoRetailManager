@@ -78,7 +78,6 @@
         {
             try
             {
-                throw new Exception("test exception");
                 products = await productEndpoint.GetAll();
                 await localStorage.SetItemAsync(ProductListName, products);
                 //ProductCacheDate whenever save to localStorage also save Date&Time
