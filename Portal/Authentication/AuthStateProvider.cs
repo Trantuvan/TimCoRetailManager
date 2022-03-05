@@ -68,11 +68,21 @@ namespace Portal.Authentication
         {
             Task<AuthenticationState> authState;
             bool isAuthenticatedOutput;
+
             try
             {
                 //API is a stateless
                 //add authorization for api (each endpoint)
                 await _apiHelper.GetLoggedInUserInfo(token);
+            }
+            catch (Exception ex)
+            {
+                //eating the error for GetLoggedInUserInfo (working offline progressive webapp)
+                Console.WriteLine(ex.Message);
+            }
+
+            try
+            {
                 //create new user with token authorization
                 var authenticateUser = new ClaimsPrincipal(
                         new ClaimsIdentity(JwtParser.ParseClaimsFromJwT(token)
