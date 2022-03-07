@@ -41,8 +41,8 @@ TimCoRetailManager requires [Microsoft.NET.Sdk] net5.0 and net5.0-windows to run
 - Click Save Profile and Publish
 
 **Create ApiAuthDB**:
-- Make Sure **TRMApi** as Startup project
-- Open Package Manager and run ```update-database```
+-Make Sure **TRMApi** as Startup project
+-Open Package Manager and run ```update-database```
 
 Run **TRMApi** and Click _Privacy_ to generate roles: 
 -Username: "Trantuvan.kan@gmail.com"
