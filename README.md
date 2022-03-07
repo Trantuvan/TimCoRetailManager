@@ -51,6 +51,6 @@ Run **TRMApi** and Click _Privacy_ to generate roles:
 
 ## License
 
-MIT
+ GPL-3.0 
 
 **Free Software, Hell Yeah!**
